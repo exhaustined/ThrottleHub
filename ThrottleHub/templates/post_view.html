@@ -1,0 +1,128 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://kit.fontawesome.com/d5cf9be20b.js" crossorigin="anonymous"></script>
+
+
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <title>ThrottleHub</title>
+
+
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets/img/favicons/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'assets/img/favicons/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets/img/favicons/favicon-16x16.png' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/img/favicons/favicon.ico' %}">
+    <link rel="manifest" href="{% static 'assets/img/favicons/manifest.json' %}">
+    <meta name="msapplication-TileImage" content="{% static 'assets/img/favicons/mstile-150x150.png' %}">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <link href="{% static 'custom_css/style.css' %}"  rel="stylesheet" />
+    <link href="{% static 'assets/css/theme.css' %}"  rel="stylesheet" />
+
+
+</head>
+
+
+<body>
+
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+<main class="main" id="top">
+    <div class="discover-main">
+        <li class="search-container">
+            <a class="navbar-brand d-inline-flex" href="{% url 'index' %}"><span class="text-light fs-2 fw-bold ms-2"><h2>ThrottleHub</h2></span></a>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item px-2"><a class="nav-link fw-bold active" aria-current="page" href="{% url 'index' %}">DISCOVER</a></li>
+                <li class="nav-item px-2">
+                    <a class="nav-link fw-bold" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        SEARCH
+                    </a>
+                    <div class="collapse" id="collapseExample">
+                        <div class="card card-body">
+
+                            <form method="POST" id="search-bar"> {% csrf_token %}
+                                <div class="mb-3">
+                                    <input type="hidden" name="form_type" value="form1">
+                                    <input type="text" class="form-control" name="searchcontent" placeholder="User" aria-describedby="emailHelp">
+                                </div>
+                                <button type="submit" class="btn btn-secondary search-button">Submit</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item px-2"><a class="nav-link fw-bold active" aria-current="page" href="{% url 'uploadspot' %}">UPLOAD SPOT</a></li>
+                {% else %}
+                <li class="nav-item px-2"><a class="nav-link fw-bold active" aria-current="page" href="{% url 'login' %}">UPLOAD SPOT</a></li>
+                {% endif %}
+
+
+                {% if request.user.is_authenticated %}
+                <li class="nav-item px-2"><a href="{% url 'profile' %}?username={{request.user.username}}"  class="nav-link fw-bold text-light">{{ request.user.username }}</a></li>
+                <li class="nav-item px-2"><a href="{% url 'logout' %} " class="nav-link text-light fw-bold">Logout</a></li>
+                {% else %}
+                <li class="nav-item px-2"><a href="{% url 'login' %} " class="nav-link text-light fw-bold">Login</a></li>
+                {% endif %}
+
+            </ul>
+        </li>
+	</div>
+    <div class="post-area">
+        <div class="post-view-container">
+            <div class="post-view-image-container">
+              <img class="post-view-image" src="{{ post.images1.url }}" alt="Clicked Image">
+            </div>
+            <div class="post-view-info">
+                <div class="comments-container">
+                    {% for c in comments %}
+                    <p>
+                        {% for p in pic %}
+                        {% if p.user_id == c.author_id %}
+                            <span><img src="{{ p.image.url }}" class="home-profile-pic"></span>
+                        {% endif %}
+                        {% endfor %}
+
+                        <a style="text-decoration: none; color: #dddddd" href="{% url 'profile' %}?username={{c.author.username}}">
+                            <span style="font-weight:bold;">{{c.author.username}}</span>
+                        </a>
+                            {{c.content}}
+                        <span style="font-size:10px;float:right;">{{ c.created|timesince }} ago</span>
+                    </p>
+                    {% endfor %}
+                </div>
+
+                <div>
+                    <form method="post" id="com" style="">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="form2">
+                    <input type="hidden" name="post" value="{{ post.id }}">
+                    <input class="long" type="text" name="comment" required>
+                    <input type="submit" value="Sent">
+                    </form>
+                </div>
+            </div>
+          </div>
+    </div>
+</main>
+
+</body>
+</html>

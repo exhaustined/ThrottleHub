@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <title>ThrottleHub</title>
+
+
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets/img/favicons/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'assets/img/favicons/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets/img/favicons/favicon-16x16.png' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/img/favicons/favicon.ico' %}">
+    <link rel="manifest" href="{% static 'assets/img/favicons/manifest.json' %}">
+    <meta name="msapplication-TileImage" content="{% static 'assets/img/favicons/mstile-150x150.png' %}">
+    <meta name="theme-color" content="#ffffff">
+    <link href="{% static 'assets/css/theme.css' %}"  rel="stylesheet" />
+
+
+</head>
+<body>
+    <main class="main" id="top">
+<!--      <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 d-block" data-navbar-on-scroll="data-navbar-on-scroll">-->
+<!--        <div class="container"><a class="navbar-brand d-inline-flex" href="index.html"><span class="text-light fs-2 fw-bold ms-2">GearSpotter</span></a>-->
+<!--          <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>-->
+<!--          <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">-->
+<!--            <ul class="navbar-nav me-auto mb-2 mb-lg-0">-->
+<!--              <li class="nav-item px-2"><a class="nav-link fw-bold active" aria-current="page" href="{% url 'uploadspot' %}">Upload Spot</a></li>-->
+<!--              <li class="nav-item px-2"><a class="nav-link fw-bold" href="#store">STORE</a></li>-->
+<!--              <li class="nav-item px-2"><a class="nav-link fw-bold" href="#contact">CONTACT</a></li>-->
+<!--              <li class="nav-item px-2"><a class="nav-link fw-bold" href="#header">REQUEST VIRTUAL</a></li>-->
+<!--            </ul>-->
+<!--            <form class="d-flex"><a class="text-primary" href="#!">-->
+<!--                <svg class="feather feather-phone-call" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">-->
+<!--                  <path d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>-->
+<!--                </svg></a>-->
+
+<!--              {% if request.user.is_authenticated %}-->
+<!--              <div class="ms-4 text-light fw-bold"><a href="" " class="ms-4 text-light fw-bold">{{ request.user.username }}</a></div>-->
+<!--              <div class="ms-4 text-light fw-bold"><a href="{% url 'logout' %} " class="ms-4 text-light fw-bold">Logout</a></div>-->
+<!--              {% else %}-->
+<!--              <div class="ms-4 text-light fw-bold"><a href="{% url 'login' %} " class="ms-4 text-light fw-bold">Login</a></div>-->
+<!--              {% endif %}-->
+
+<!--            </form>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </nav>-->
+    <li class="search-container">
+        <a class="navbar-brand d-inline-flex" href="{% url 'index' %}"><span class="text-light fs-2 fw-bold ms-2"><h2>ThrottleHub</h2></span></a>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item px-2"><a class="nav-link fw-bold active" aria-current="page" href="{% url 'index' %}">DISCOVER</a></li>
+            <li class="nav-item px-2">
+                <a class="nav-link fw-bold" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    SEARCH
+                </a>
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body">
+
+                        <form method="POST" id="search-bar"> {% csrf_token %}
+                            <div class="mb-3">
+                                <input type="hidden" name="form_type" value="form1">
+                                <input type="text" class="form-control" name="searchcontent" placeholder="User" aria-describedby="emailHelp">
+                            </div>
+                            <button type="submit" class="btn btn-secondary search-button">Submit</button>
+                        </form>
+
+                    </div>
+                </div>
+            </li>
+            {% if request.user.is_authenticated %}
+            <li class="nav-item px-2"><a class="nav-link fw-bold active" aria-current="page" href="{% url 'uploadspot' %}">UPLOAD SPOT</a></li>
+            {% else %}
+            <li class="nav-item px-2"><a class="nav-link fw-bold active" aria-current="page" href="{% url 'login' %}">UPLOAD SPOT</a></li>
+            {% endif %}
+            <li class="nav-item px-2"><a class="nav-link fw-bold" href="#contact">CONTACT</a></li>
+            <li class="nav-item px-2"><a class="nav-link fw-bold" href="#header">REQUEST VIRTUAL</a></li>
+
+            {% if request.user.is_authenticated %}
+            <li class="nav-item px-2"><a href="{% url 'profile' %}?username={{request.user.username}}"  class="nav-link fw-bold text-light">{{ request.user.username }}</a></li>
+            <li class="nav-item px-2"><a href="{% url 'logout' %} " class="nav-link text-light fw-bold">Logout</a></li>
+            {% else %}
+            <li class="nav-item px-2"><a href="{% url 'login' %} " class="nav-link text-light fw-bold">Login</a></li>
+            {% endif %}
+
+        </ul>
+    </li>
+
+
+
+
+</body>
+</html>

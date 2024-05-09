@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ThrottleHub</title>
+</head>
+<body>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script>
+  $(document).ready(function(){
+    $('.like').click(function(){
+      var post_id = $(this).data('postId');
+
+      $.ajax({
+        url: "/like/", // Replace with your actual like view URL
+        type: "GET",
+        data: { post_id: post_id },
+        success: function(response) {
+          // Update like button based on response (liked/unliked)
+          if (response.liked) {
+            $(this).addClass('liked');
+          } else {
+            $(this).removeClass('liked');
+          }
+          // Update like count if needed (optional)
+        }
+      });
+    });
+  });
+
+
+  </script>
+<div class="post-container">
+  <div class="spot-post">
+    <div class="spotter-info">
+      <a href="{% url 'profile' %}?username={{p.spotter.username}}" class="username">{{ p.spotter.username}}</a>
+      <span class="date">| <span>{{ p.date }}</span></span>
+      <br>
+      <span class="location"><span>{{ p.city }}</span></span>
+    </div>
+    <div class="post-image">
+      <a href="{% url 'post_view' p.id %}">
+        <img class="post-image-img" src="{{ p.images1.url }}" alt="Car Name and Model">
+      </a>
+    </div>
+    <div class="car-details">
+      <h3><span class="car-name"></span><span class="model">{{ p.brand}} {{p.model }}</span>
+        {% if garage %}
+          {% for g in garage %}
+          {% if g.id == p.owner_id %}
+          <span><a href="{% url 'profile' %}?username={{g.username}}"><img class="key" src="{% static 'assets/img/icons/key.png' %}" alt="My Icon"></a></span></h3>
+          {% endif %}
+          {% endfor %}
+        {% else %}
+        </h3>
+        {% endif %}
+
+      <div class="actions">
+<!--        {% if request.user.is_authenticated %}-->
+<!--          {% if p.id in liked_posts %}-->
+<!--            <div class="col-1"><a href="{% url 'like' %}?post_id={{p.id}}" class="like action-icons liked" data-post-id="{{ p.id }}"><img class="action-icons" src="{% static 'assets/img/icons/liked.png' %}" alt="My Icon"></a></div>-->
+<!--          {% else %}-->
+<!--            <div class="col-1"><a href="{% url 'like' %}?post_id={{p.id}}" class="like action-icons" data-post-id="{{ p.id }}"><img class="action-icons" src="{% static 'assets/img/icons/heart.png' %}" alt="My Icon"></a></div>-->
+<!--          {% endif %}-->
+<!--        {% else %}-->
+<!--          <div class="col-1"><img class="action-icons" src="{% static 'assets/img/icons/heart.png' %}" alt="My Icon"></div>-->
+<!--        {% endif %}-->
+      <div class="col-1"><a href="" class="like action-icons" data-post-id="{{ p.id }}"><img class="action-icons" src="{% static 'assets/img/icons/heart.png' %}" alt="My Icon"></a></div>
+        <div class="col-1"><a href="{% url 'post_view' p.id %}">
+            <img class="action-icons" src="{% static 'assets/img/icons/comment.png' %}" alt="My Icon">
+        </a>
+        </div>
+        <div class="col-1"><img class="action-icons" src="{% static 'assets/img/icons/share.png' %}" alt="My Icon"></div>
+      </div>
+      <div>
+          <form method="post" id="com" style="display:none;">
+              {% csrf_token %}
+              <input type="hidden" name="form_type" value="form2">
+              <input type="hidden" name="post" value="{{ p.id }}">
+          <input type="text" name="comment" required>
+          <input type="submit" value="Sent">
+          </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% if page == 'discover' %}
+    <div style="background-color: rgba(0, 0, 0, 0.1);" class="post-overlay">
+        <div class="post-view-container">
+            <div class="post-view-image-container">
+              <img class="post-view-image" src="" alt="Clicked Image">
+            </div>
+            <div class="post-view-info">
+              </div>
+          </div>
+    </div>
+{% else %}
+  <div style="background-color: rgba(0, 0, 0, 0.5);" class="post-overlay">
+
+  </div>
+{% endif %}
+  </body>
+</html>

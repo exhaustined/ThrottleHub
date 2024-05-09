@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ThrottleHub</title>
+
+    <!-- Font Icon -->
+    <link rel="stylesheet" href="{% static 'assets/reg_assets/fonts/material-icon/css/material-design-iconic-font.min.css' %}">
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="{% static 'assets/reg_assets/css/style.css' %}">
+</head>
+<body style="background: #000033;">
+
+    <div class="main">
+
+        <div class="container" style="width: 400px">
+            <div class="booking-content">
+
+                <div class="booking-form" style="width:100%">
+                    <a style="text-decoration:none; color:white;" href="{% url 'index' %}"><h1 align="center">GearSpotter</h1></a>
+                    <form method="POST" id="booking-form" enctype="multipart/form-data">  {% csrf_token %}
+                        <center><h1 style="margin: 0px">Add to garage</h1></center>
+                        <div class="form-group form-input" >
+                            <input type="text" name="l_plate" id="l_plate" value="" required/>
+                            <label for="l_plate" class="form-label">License Plate</label>
+                        </div>
+                        <div class="form-group form-input" >
+                            <input type="text" name="l_plate_confirm" id="l_plate_confirm" value="" required/>
+                            <label for="l_plate_confirm" class="form-label">Confirm License Plate</label>
+                        </div>
+                        {% if messages %}
+                        {% for m in messages %}
+                        {% if m.tags == "error" %}
+                        <center><p style="color:red;">{{ m }}</p></center>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+                        <div class="form-group form-input">
+                            <input type="text" name="brand" id="brand" value="" required />
+                            <label for="brand" class="form-label">Brand</label>
+                        </div>
+
+                        <div class="form-group form-input">
+                            <input type="text" name="model" id="model" value="" required />
+                            <label for="model" class="form-label">Model</label>
+                        </div>
+                        <centre>
+<!--                        <div id="drop-area" style="border: 2px solid #ccc; border-radius: 20px; width: px; height: 200px; text-align: center; line-height: 200px; font-size: 18px; margin: 50px auto;" ondragover="event.preventDefault(); event.target.style.borderColor = '#007bff';" ondragleave="event.target.style.borderColor = '#ccc';" ondrop="event.preventDefault(); event.target.style.borderColor = '#ccc'; dropHandler(event);">-->
+<!--                            Drag & Drop Images Here-->
+<!--                        <input type="file" name="images" multiple style="display: none;">-->
+<!--                        </div>-->
+                            <input type="file" name="image" required>
+                        </centre>
+<!--                        <button type="submit">Upload</button>-->
+
+
+
+                        <center><div class="form-submit">
+                            <input type="submit" value="Upload" class="submit" id="submit" name="submit" />
+                        </div></center>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JS -->
+    <script src="{% static 'assets/reg_assets/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/reg_assets/js/main.js' %}"></script>
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>

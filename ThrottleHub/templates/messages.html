@@ -1,0 +1,192 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html style="background: #222222 !important;">
+	<head  style="background: #222222 !important;">
+		<title>Chat</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
+
+        <link rel="stylesheet" href="{% static 'assets/css/message.css' %}">
+        <link href="{% static 'custom_css/style.css' %}"  rel="stylesheet" />
+
+
+    </head>
+	<!--Coded With Love By Mutiullah Samim-->
+	<body style="background: #222222 !important;">
+    <div class="discover-main">
+        <li class="search-container">
+            <a class="navbar-brand d-inline-flex" href="{% url 'index' %}"><span class="text-light fs-2 fw-bold ms-2"><h2>ThrottleHub</h2></span></a>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item px-2"><a class="nav-link fw-bold active" aria-current="page" href="{% url 'index' %}">DISCOVER</a></li>
+                <li class="nav-item px-2">
+                    <a class="nav-link fw-bold" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        SEARCH
+                    </a>
+                    <div class="collapse" id="collapseExample">
+                        <div class="card card-body">
+
+                            <form method="POST" id="search-bar"> {% csrf_token %}
+                                <div class="mb-3">
+                                    <input type="hidden" name="form_type" value="form1">
+                                    <input type="text" class="form-control" name="searchcontent" placeholder="User" aria-describedby="emailHelp">
+                                </div>
+                                <button type="submit" class="btn btn-secondary search-button">Submit</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item px-2"><a class="nav-link fw-bold active" aria-current="page" href="{% url 'uploadspot' %}">UPLOAD SPOT</a></li>
+                {% else %}
+                <li class="nav-item px-2"><a class="nav-link fw-bold active" aria-current="page" href="{% url 'login' %}">UPLOAD SPOT</a></li>
+                {% endif %}
+
+
+                {% if request.user.is_authenticated %}
+                <li class="nav-item px-2"><a href="{% url 'profile' %}?username={{request.user.username}}"  class="nav-link fw-bold text-light">{{ request.user.username }}</a></li>
+                <li class="nav-item px-2"><a href="{% url 'logout' %} " class="nav-link text-light fw-bold">Logout</a></li>
+                {% else %}
+                <li class="nav-item px-2"><a href="{% url 'login' %} " class="nav-link text-light fw-bold">Login</a></li>
+                {% endif %}
+
+            </ul>
+        </li>
+		<div class="container-fluid h-100" style="padding-top:0px; margin-left: 250px;">
+			<div class="row justify-content-center h-100 ">
+				<div class="col-md-4 col-xl-3 chat h-100 mt-4">
+                    <div class="card mb-sm-3 mb-md-0 contacts_card">
+					<div class="card-body contacts_body">
+						<ui class="contacts">
+                            {% for thread in chats %}
+                            {% if thread.first_person == user %}
+                                <a style="text-decoration: none;" href="{% url 'message' thread.second_person.id %}">
+                            {% else %}
+                                <a style="text-decoration: none;" href="{% url 'message' thread.first_person.id %}">
+                            {% endif %}
+                            <li class="chat-profile">
+                                <div class="d-flex bd-highlight">
+<!--                                        {% if thread.first_person == user %}-->
+<!--                                            <span>{{ thread.second_person.username }}</span>-->
+<!--                                        {% else %}-->
+<!--                                            <span>{{ thread.first_person.username }}</span>-->
+<!--                                        {% endif %}-->
+<!--                                        -->
+<!--                                        <div class="img_cont">-->
+<!--                                            <img src="{{ p.image.url }}" class="rounded-circle user_img">-->
+<!--                                            <span class="online_icon"></span>-->
+<!--                                        </div>-->
+                                    <div class="user_info">
+                                        {% if thread.first_person == user %}
+                                        <span>{{ thread.second_person.username }}</span>
+                                        {% else %}
+                                            <span>{{ thread.first_person.username }}</span>
+                                        {% endif %}
+
+                                        <p>{{thread.To_user.username}} is online</p>
+                                    </div>
+                                </div>
+                            </li>
+                            </a>
+
+
+                            {% endfor %}
+						</ui>
+					</div>
+					<div class="card-footer"></div>
+				</div></div>
+				<div class="col-md-8 col-xl-6 chat h-100 mt-4">
+					<div class="card">
+                        {% if id != None %}
+                        {% for thread in Threads %}
+                            <div class="messages-wrapper  {% if forloop.first %}hide is_active{% else %}hide{% endif %}" chat-id="chat_{{ thread.id }}" other-user-id="
+                                        {% if thread.first_person == user %}
+                                            {{ thread.second_person.id }}
+                                        {% else %}
+                                            {{ thread.first_person.id }}
+                                        {% endif %}
+                                    ">
+                                <div class="card-header msg_head">
+                                    <div class="d-flex bd-highlight">
+<!--                                        <div class="img_cont">-->
+<!--                                            <img src="{{ p.image.url }}" class="rounded-circle user_img">-->
+<!--                                            <span class="online_icon"></span>-->
+<!--                                        </div>-->
+                                        <div class="user_info">
+                                            <span><h4>{{ to_user }}</h4></span>
+<!--                                            <p>{{ thread.chatmessage_thread.all.count }} messages</p>-->
+                                        </div>
+
+                                    </div>
+                                    <span id="action_menu_btn"><i class="fas fa-ellipsis-v"></i></span>
+                                    <div class="action_menu">
+                                        <ul>
+                                            <li><i class="fas fa-user-circle"></i> View profile</li>
+                                            <li><i class="fas fa-users"></i> Add to close friends</li>
+                                            <li><i class="fas fa-plus"></i> Add to group</li>
+                                            <li><i class="fas fa-ban"></i> Block</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div style="height:70%;" class="card-body msg_card_body overflow-auto">  {% for chat in thread.chatmessage_thread.all %}
+            {% if chat.user == request.user %}
+              <div class="d-flex mb-4 replied">
+                <div class="msg_cotainer_send">
+                  {{ chat.message }}
+                  <span class="msg_time_send">{{ chat.timestamp|date:"d D" }}, {{ chat.timestamp|time:"H:i" }}</span>
+                  {% if chat.read %}
+                    <i class="fas fa-check-double"></i> {% else %}
+                    <i class="fas fa-check"></i> {% endif %}
+                </div>
+              </div>
+            {% else %}
+              <div class="d-flex mb-4 received">
+                <div class="msg_cotainer">
+                  {{ chat.message }}
+                  <span class="msg_time">{{ chat.timestamp|date:"d D" }}, {{ chat.timestamp|time:"H:i" }}</span>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+
+          </div>
+
+					        </div>
+                        {% endfor %}
+
+                        <div class="card-footer">
+                                <form id="send-message-form" method="post">
+                                    {% csrf_token %}
+                                    <div class="input-group">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
+                                        </div>
+                                        <input type="hidden" id="logged-in-user" value="{{ logged_in_user_id }}">
+                                        <input type="text" name="msg" id="input-message" class="form-control type_msg" placeholder="Type your message...">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-secondary" type="submit">
+                                                <span class="input-group-text send_btn">
+                                                    <i class="fas fa-location-arrow"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                </div>
+                            </form>
+                        </div>
+                        {% else %}
+                        <i style="color:white;font-size:20px;font-weight:bold;padding-left:100px;padding-top:100px;">Please select your Friend to start a Chat!</i>
+                        {% endif %}
+                    </div>
+				</div>
+			</div>
+		</div>
+
+        <script src="{% static 'assets/js/messages.js' %}"></script>
+    </div>
+	</body>
+</html>
